@@ -1,10 +1,6 @@
 require "activeadmin-settings/version"
 
 module ActiveadminSettings
-  def self.table_name_prefix
-    'activeadmin_settings_'
-  end
-
   require 'activeadmin-settings/engine'
   require 'activeadmin-settings/helper'
   require 'activeadmin-settings/routing'
@@ -28,7 +24,7 @@ module ActiveadminSettings
     config_file = ::Rails.root.join(@@config_file)
     @load_config = {}
 
-    if File.exists?(config_file)
+    if File.exist?(config_file)
       data = YAML::load(ERB.new(IO.read(config_file)).result)
       @load_config = data if data
     end

@@ -1,5 +1,5 @@
 class ActiveadminSettings::PicturesController < ApplicationController
-  before_filter :authenticate!
+  before_action :authenticate!
 
   def index
     @pictures = ActiveadminSettings::Picture.all

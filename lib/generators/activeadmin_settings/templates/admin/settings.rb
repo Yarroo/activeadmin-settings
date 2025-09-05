@@ -25,21 +25,19 @@ ActiveAdmin.register_page "Settings" do
           settings = settings_hash.select{ |(k, _)| I18n.available_locales.include?(k.to_sym) }.values
           # add new settings for missing locales
           (I18n.available_locales - settings_hash.keys.map(&:to_sym)).each do |locale|
-            settings << ActiveadminSettings::Setting.initiate_setting(name, locale)
+            settings << ActiveadminSettings::Setting.value(name, locale)
           end
         else  
           settings = []
           # add settings for available locales
           I18n.available_locales.each do |locale|
-            ActiveadminSettings::Setting.initiate_setting(name, locale)
+            ActiveadminSettings::Setting.value(name, locale)
           end
         end
         group[:settings] += settings
       end
     end
 
-    render  :partial  => "index",
-            :locals   => { :admins => AdminUser.all,
-                           :groups => groups }
+    render :partial  => "index", locals: { :groups => groups }
   end
 end
