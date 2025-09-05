@@ -1,11 +1,5 @@
 module ActiveadminSettings
   module PictureMethods
-
-    def self.included(base)
-      # Features
-      base.mount_uploader :data, ActiveadminSettings::RedactorPictureUploader
-    end
-
     # Helpers
     def has_dimensions?
       respond_to?(:width) && respond_to?(:height)

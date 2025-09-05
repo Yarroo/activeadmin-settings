@@ -1,18 +1,9 @@
 module ActiveadminSettings
   module SettingMethods
     def self.included(base)
-      base.mount_uploader  :file, ActiveadminSettings::SettingsFileUploader
-
-      # Validators
-      # base.validates_presence_of   :name
-      # base.validates_uniqueness_of :name, scope: :locale
-      # base.validates_length_of     :name, minimum: 1
-
       base.validates :name, presence: true, uniqueness: { scope: :locale }, length: { minimum: 1 }
-
       base.extend ClassMethods
     end
-
 
     # Class
     module ClassMethods
@@ -26,7 +17,6 @@ module ActiveadminSettings
         setting
       end
     end
-
 
     # Instance
     def type
@@ -64,7 +54,6 @@ module ActiveadminSettings
       val = default_value if val.empty?
       val.html_safe
     end
-
   end
 
   if defined?(Mongoid)
@@ -89,6 +78,8 @@ module ActiveadminSettings
     end
   else
     class Setting < ActiveRecord::Base
+      self.table_name = 'settings'  # ← ВАЖНО: явное указание таблицы
+
       include SettingMethods
 
       unless Rails::VERSION::MAJOR > 3 && !defined? ProtectedAttributes
