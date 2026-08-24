@@ -3,10 +3,10 @@ class ActiveadminSettings::AdminUsersController < ApplicationController
 
   def update
     @object = AdminUser.find(params[:id])
-    if @object.update_attributes(permitted_params[:admin_user])
-      render :text => "ok"
+    if @object.update(permitted_params[:admin_user])
+      render :plain => "ok"
     else
-      render :text => @object.errors.to_json, :status => :unprocessable_entity
+      render :plain => @object.errors.to_json, :status => :unprocessable_entity
     end
   end
 
@@ -15,7 +15,7 @@ class ActiveadminSettings::AdminUsersController < ApplicationController
     if @object.save
       render :partial => "admin/settings/admin", :locals => {:admin => @object}, :layout => false
     else
-      render :text => @object.errors.to_json, :status => :unprocessable_entity
+      render :plain => @object.errors.to_json, :status => :unprocessable_entity
     end
   end
 
