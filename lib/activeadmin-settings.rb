@@ -19,6 +19,9 @@ module ActiveadminSettings
   mattr_accessor :config_file
   @@config_file = "config/activeadmin_settings.yml"
 
+  mattr_accessor :snapshot_ttl
+  @@snapshot_ttl = 600
+
   # Load configuration from config/activeadmin_settings.yml
   def self.load_config
     config_file = ::Rails.root.join(@@config_file)
