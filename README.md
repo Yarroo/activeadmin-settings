@@ -8,7 +8,7 @@ This gem is not supported and developed anymore.
 
 Easy to use general purpose settings backend for activeadmin.
 
-![ActiveadminSettings Demo](https://raw.github.com/slate-studio/activeadmin-settings/master/img/activeadmin-settings-demo.jpg)
+![ActiveadminSettings Demo](https://raw.githubusercontent.com/Yarroo/activeadmin-settings/master/img/activeadmin-settings-demo.jpg)
 
 
 ### Installation
@@ -67,7 +67,7 @@ All of the settings may be cplitted to groupes by adding optional param `group`,
 
 As result we'll see:
 
-![ActiveadminSettings Group Example](https://raw.github.com/slate-studio/activeadmin-settings/master/img/activeadmin-group-example.png)
+![ActiveadminSettings Group Example](https://raw.githubusercontent.com/Yarroo/activeadmin-settings/master/img/activeadmin-group-example.png)
 
 There are a few types of settings:
 
