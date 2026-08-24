@@ -119,8 +119,8 @@ module ActiveadminSettings
 
         def load_values
           values = {}
-          all.each do |setting|
-            values[[setting.name, setting.locale.to_s]] = setting.value.freeze
+          unscoped.each do |setting|
+            values[[setting.name.to_s, setting.locale.to_s]] = setting.value.freeze
           rescue StandardError
             next
           end
