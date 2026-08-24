@@ -167,6 +167,21 @@ Settings could be integrated into templates as well as models or controllers cod
 If setting value is `null` or an empty string default setting value is used which is defined in `config/activeadmin_settings.yml`. If locale is not specified, default is used.
 
 
+### Caching
+
+`settings_value` used to hit the database on every call, which adds up fast on a page that reads a few dozen settings. The whole settings table is now kept in a per-process snapshot, keyed by name and locale, and rebuilt once it goes stale.
+
+The snapshot lives for 10 minutes by default. Set your own in an initializer:
+
+    # config/initializers/activeadmin_settings.rb
+    ActiveadminSettings.snapshot_ttl = 5.minutes
+
+Saving a setting drops the snapshot in the process that saved it, so there the change shows up at once; other processes pick it up within the TTL. Reading a name that is not in the snapshot still falls back to the database, so settings keep registering themselves the first time they are read.
+
+Set the TTL to `0` to switch caching off and read from the database on every call, the way it worked before:
+
+    ActiveadminSettings.snapshot_ttl = 0
+
 ### FUTURE FEATURES
 
 I'm going to add types:

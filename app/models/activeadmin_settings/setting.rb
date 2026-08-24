@@ -65,8 +65,62 @@ module ActiveadminSettings
         attr_accessible :name, :string, :file, :remove_file, :locale
       end
 
-      def self.value(name, locale)
-        find_or_create_by(:name => name, :locale => (locale || I18n.locale)).value
+      Snapshot = Struct.new(:values, :at)
+
+      @snapshot = nil
+      @snapshot_lock = Mutex.new
+
+      after_commit { self.class.reset_snapshot }
+
+      class << self
+        def value(name, locale = nil)
+          locale ||= I18n.locale
+          key = [name.to_s, locale.to_s]
+          values = snapshot_values
+          return values[key] if values.key?(key)
+
+          find_or_create_by(:name => name, :locale => locale).value
+        end
+
+        def reset_snapshot
+          @snapshot = nil
+        end
+
+        private
+
+        def snapshot_values
+          ttl = ActiveadminSettings.snapshot_ttl.to_f
+          return {} unless ttl > 0
+
+          current = @snapshot
+          return current.values if fresh?(current, ttl)
+
+          @snapshot_lock.synchronize do
+            current = @snapshot
+            return current.values if fresh?(current, ttl)
+
+            @snapshot = Snapshot.new(load_values, monotonic_now)
+            @snapshot.values
+          end
+        end
+
+        def fresh?(snapshot, ttl)
+          snapshot && (monotonic_now - snapshot.at) < ttl
+        end
+
+        def load_values
+          values = {}
+          all.each do |setting|
+            values[[setting.name, setting.locale.to_s]] = setting.value.freeze
+          rescue StandardError
+            next
+          end
+          values.freeze
+        end
+
+        def monotonic_now
+          Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        end
       end
   end
 end
