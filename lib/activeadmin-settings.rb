@@ -24,22 +24,22 @@ module ActiveadminSettings
 
   # Load configuration from config/activeadmin_settings.yml
   def self.load_config
-    config_file = ::Rails.root.join(@@config_file)
-    @load_config = {}
-
-    if File.exist?(config_file)
-      data = YAML::load(ERB.new(IO.read(config_file)).result)
-      @load_config = data if data
+    @load_config ||= begin
+      config_file = ::Rails.root.join(@@config_file)
+      data = YAML::load(ERB.new(IO.read(config_file)).result) if File.exist?(config_file)
+      data || {}
     end
-    @load_config
   end
 
   def self.all_settings
-    @all_settings = {}
-    load_config.each do |key, settings|
-      @all_settings.merge!(settings)
+    @all_settings ||= load_config.each_with_object({}) do |(_key, settings), all|
+      all.merge!(settings)
     end
-    @all_settings
+  end
+
+  def self.reload_config!
+    @load_config = nil
+    @all_settings = nil
   end
 
   def self.groups
