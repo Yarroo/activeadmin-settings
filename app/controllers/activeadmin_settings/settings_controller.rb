@@ -4,9 +4,9 @@ class ActiveadminSettings::SettingsController < ApplicationController
   def update
     @object = ActiveadminSettings::Setting.find(params[:id])
     if @object.update(permitted_params[:setting])
-      render :text => @object.value
+      render :plain => @object.value
     else
-      render :text => "error"
+      render :plain => "error"
     end
   end
 
