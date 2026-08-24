@@ -95,13 +95,21 @@ module ActiveadminSettings
           current = @snapshot
           return current.values if fresh?(current, ttl)
 
-          @snapshot_lock.synchronize do
+          unless @snapshot_lock.try_lock
+            return current.values if current
+
+            @snapshot_lock.lock
+          end
+
+          begin
             current = @snapshot
             return current.values if fresh?(current, ttl)
 
             snapshot = Snapshot.new(load_values, monotonic_now)
             @snapshot = snapshot
             snapshot.values
+          ensure
+            @snapshot_lock.unlock
           end
         end
 
