@@ -28,13 +28,6 @@ Add i18n configuration to `config/application.rb` file:
 
 #### ActiveRecord
 
-    gem "aws-s3"
-    gem "fog"
-    gem "mini_magick"
-    gem "carrierwave"
-
-    gem "bson_ext"
-    gem "devise"
     gem "activeadmin-settings"
 
 Run migrations:
