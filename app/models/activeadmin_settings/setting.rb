@@ -83,7 +83,7 @@ module ActiveadminSettings
         end
 
         def reset_snapshot
-          @snapshot = nil
+          @snapshot_lock.synchronize { @snapshot = nil }
         end
 
         private
@@ -99,8 +99,9 @@ module ActiveadminSettings
             current = @snapshot
             return current.values if fresh?(current, ttl)
 
-            @snapshot = Snapshot.new(load_values, monotonic_now)
-            @snapshot.values
+            snapshot = Snapshot.new(load_values, monotonic_now)
+            @snapshot = snapshot
+            snapshot.values
           end
         end
 
