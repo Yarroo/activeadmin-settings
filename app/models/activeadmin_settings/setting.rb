@@ -50,8 +50,9 @@ module ActiveadminSettings
     end
 
     def value
-      val = respond_to?(type) ? send(type).to_s : send(:string).to_s
-      val = default_value if val.empty?
+      stored = respond_to?(type) ? send(type) : send(:string)
+      val = stored.to_s
+      val = default_value if val.empty? && !stored.is_a?(String)
       val.html_safe
     end
   end
